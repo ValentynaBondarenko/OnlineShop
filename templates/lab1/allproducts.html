@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>All users</title>
+</head>
+<style>
+   body {
+    background: url(https://image.freepik.com/free-photo/green-leaves-on-white-background_53876-88575.jpg);
+   }
+
+</style>
+<body>
+<h1 align="center" style="font-size:7">All users from database!</h1>
+<table width="70%" border="2" class="table table-bordered" align="center">
+    <thead class="thead-light" align="center">
+    <style>
+   button {
+   background: #008EB0;
+    }
+
+    </style>
+    <tr>
+        <th>
+            <button>ACTIONS:</button>
+        </th>
+        <th>
+            <form action="/add" target="_blank">
+                <button>Add user</button>
+            </form>
+        </th>
+        <th>
+            <form action="/delete" target="_blank">
+                <button>Delete user</button>
+            </form>
+        </th>
+        <th>
+            <form action="/update" target="_blank">
+                <button>Update user</button>
+            </form>
+        </th>
+
+        <th>
+            <form action="/products" target="_blank">
+                <button>Select all products</button>
+            </form>
+        </th>
+    </tr>
+</table>
+<h2></h2>
+
+<div class="container">
+
+    <table width="100%" border="2" class="table table-bordered" bgcolor="	#32CD321">
+        <center>
+            <nav class="navbar navbar-light bg-light ">
+                <form class="form-inline" action="/products/search" method="GET">
+                    <input class="form-control mr-sm-2" name="searchText" size="110" type="search"
+                           placeholder="Search users on  Firstname and Lastname" aria-label="Search">
+                    <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </nav>
+        </center>
+        <thead class="thead-light" align="center">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Creation Date</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <#list products as product>
+        <tr align="center" bgcolor="		#E0FFFF">
+            <td>${product.getId()}</td>
+            <td>${product.getName()}</td>
+            <td>${product.getPrice()}</td>
+            <td>${product.getCreationDate()}</td>
+
+<!--            <td><#if product.getCreationDate()??>-->
+<!--                 ${product.getCreationDate()}-->
+<!--                <#else> Null-->
+<!--                when-missing </#if> </td>-->
+        </tr>
+        </#list>
+        </tbody>
+    </table>
+    
+</body>
+</html>
