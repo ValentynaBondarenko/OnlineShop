@@ -1,7 +1,6 @@
 package servlets;
 
 import dao.JdbcProductDao;
-import entity.Product;
 import pagegenerator.PageGenerator;
 
 import javax.servlet.http.HttpServlet;
@@ -11,44 +10,40 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddProductServlet extends HttpServlet {
-    JdbcProductDao jdbcProductDao = new JdbcProductDao();
-
+public class DeleteProductServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, Object> pageVariables = createPageVariablesMap(request);
+
         PageGenerator pageGenerator = PageGenerator.instance();
-        String page = pageGenerator.getPage("addproduct.html", pageVariables);
+
+        String page = pageGenerator.getPage("deleteproduct.html", pageVariables);
 
         try {
             response.getWriter().println(page);
-        } catch (IOException exception) {
-            throw new RuntimeException("Cant get data from request");
+        } catch (IOException e) {
+            throw new RuntimeException("Cant get data from request about delete user");
         }
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
-        int id = Integer.parseInt(request.getParameter("id"));
-        String name = request.getParameter("name");
-        int price = Integer.parseInt(request.getParameter("price"));
-        String creationdate = request.getParameter("creationdate");
 
-
-        Product product = new Product(id, name, price, creationdate);
+        String id = request.getParameter("id");
 
         response.setContentType("text/html;charset=utf-8");
 
+        JdbcProductDao jdbcProductDao = new JdbcProductDao();
         try {
-            jdbcProductDao.addNewProduct(product);
+            jdbcProductDao.remove(Integer.parseInt(id));
         } catch (NumberFormatException e) {
-            throw new RuntimeException("Check new product`s parameters. Cant add to database");
+            e.printStackTrace();
         }
         try {
             response.sendRedirect("/products");
         } catch (IOException e) {
-            throw new RuntimeException("Cant show table with update products");
+            throw new RuntimeException("Cant delete product from database");
         }
         try {
             response.getWriter().close();
@@ -60,9 +55,6 @@ public class AddProductServlet extends HttpServlet {
     static Map<String, Object> createPageVariablesMap(HttpServletRequest request) {
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("id", request.getParameter("id"));
-        pageVariables.put("name", request.getParameter("name"));
-        pageVariables.put("price", request.getParameter("price"));
-        pageVariables.put("creationdate", request.getParameter("creationdate"));
 
         return pageVariables;
     }

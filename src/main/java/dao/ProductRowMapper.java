@@ -11,7 +11,7 @@ public class ProductRowMapper {
         product.setId(resultSet.getInt("id"));
         product.setName(resultSet.getString("name"));
         product.setPrice(resultSet.getInt("price"));
-        product.setCreationDate(resultSet.getString("creationdate"));
+        product.setCreationDate(String.valueOf(resultSet.getDate("creationdate")));
         return product;
     }
 }

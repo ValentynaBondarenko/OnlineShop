@@ -8,11 +8,11 @@ import java.util.Calendar;
 import java.util.List;
 
 public class JdbcProductDao implements ProductDao {
-    private final static String INSERT_NEW = "INSERT INTO users VALUES (?,?,?,?,?)";
-    private final static String DELETE = "DELETE FROM users WHERE id=?";
+    private final static String INSERT_NEW = "INSERT INTO products VALUES (?,?,?,?)";
+    private final static String DELETE = "DELETE FROM products WHERE id=?";
     private final static String SELECT = "SELECT id, name, price, creationdate FROM products";
-    private static final String UPDATE = "UPDATE users SET firstName=?,lastName=?, salary=?, dateOfBirth=? WHERE id=?";
-    private static final String SEARCH = "SELECT id, firstName, lastName, salary,dateOfBirth FROM users WHERE LOWER (firstName) LIKE ? OR LOWER (lastName) LIKE ?;";
+    private static final String UPDATE = "UPDATE products SET name=?, price=?, creationdate=? WHERE id=?";
+    private static final String SEARCH = "SELECT id, name, price, creationdate FROM products WHERE LOWER (name) LIKE ?;";
 
     private ConnectionFactory connectionFactory = new ConnectionFactory();
     private ProductRowMapper productRowMapper = new ProductRowMapper();
@@ -26,8 +26,8 @@ public class JdbcProductDao implements ProductDao {
 
             ResultSet resultSet = statement.executeQuery(SELECT);
             while (resultSet.next()) {
-                Product user = productRowMapper.mapRow(resultSet);
-                products.add(user);
+                Product product = productRowMapper.mapRow(resultSet);
+                products.add(product);
             }
         } catch (SQLException exception) {
             throw new RuntimeException("Can not show all products from database", exception);
@@ -41,10 +41,11 @@ public class JdbcProductDao implements ProductDao {
         try (Connection connection = connectionFactory.connectionToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_NEW)) {
 
-            preparedStatement.setString(1, String.valueOf(product.getId()));
+            preparedStatement.setInt(1, product.getId());
             preparedStatement.setString(2, product.getName());
-            preparedStatement.setString(3, String.valueOf(product.getPrice()));
-            preparedStatement.setString(4, product.getCreationDate());
+            preparedStatement.setInt(3, product.getPrice());
+            preparedStatement.setDate(4, Date.valueOf(product.getCreationDate()));
+
 
             preparedStatement.executeUpdate();
 
@@ -72,10 +73,11 @@ public class JdbcProductDao implements ProductDao {
         try (Connection connection = connectionFactory.connectionToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
 
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setString(2, String.valueOf(product.getPrice()));
-            preparedStatement.setInt(3, Integer.parseInt(product.getCreationDate()));
             preparedStatement.setInt(4, product.getId());
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setInt(2, product.getPrice());
+            preparedStatement.setDate(3, Date.valueOf(product.getCreationDate()));
+//            preparedStatement.setInt(4, product.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -92,7 +94,6 @@ public class JdbcProductDao implements ProductDao {
              PreparedStatement preparedStatement = connection.prepareStatement(SEARCH)) {
 
             preparedStatement.setString(1, searchWord);
-            preparedStatement.setString(2, searchWord);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
 
                 while (resultSet.next()) {
@@ -102,7 +103,7 @@ public class JdbcProductDao implements ProductDao {
             }
             return products;
         } catch (SQLException e) {
-            throw new RuntimeException("error. Can't search users with text: " + searchText, e);
+            throw new RuntimeException("error. Can't search product with text: " + searchText, e);
         }
     }
 }
