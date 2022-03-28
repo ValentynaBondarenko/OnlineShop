@@ -4,29 +4,58 @@ import dao.JdbcProductDao;
 import entity.Product;
 import pagegenerator.PageGenerator;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddProductServlet extends HttpServlet {
     JdbcProductDao jdbcProductDao = new JdbcProductDao();
 
+    public AddProductServlet(List<String> userTokens) {
+        this.userTokens = userTokens;
+    }
+
+    List<String> userTokens;
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
+        boolean isAuth = false;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("user-token")) {
+                    if(userTokens.contains(cookie.getValue())){
+                        isAuth = true;
+                    }
 
-        Map<String, Object> pageVariables = createPageVariablesMap(request);
-        PageGenerator pageGenerator = PageGenerator.instance();
-        String page = pageGenerator.getPage("addproduct.html", pageVariables);
-
-        try {
-            response.getWriter().println(page);
-        } catch (IOException exception) {
-            throw new RuntimeException("Cant get data from request");
+                    break;
+                }
+            }
         }
-        response.setContentType("text/html;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
+        if (isAuth) {
+            Map<String, Object> pageVariables = createPageVariablesMap(request);
+
+            PageGenerator pageGenerator = PageGenerator.instance();
+            String page = pageGenerator.getPage("addproduct.html", pageVariables);
+
+            try {
+                response.getWriter().println(page);
+            } catch (IOException exception) {
+                throw new RuntimeException("Cant get data from request");
+            }
+            response.setContentType("text/html;charset=utf-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            try {
+                response.sendRedirect("/login");
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {

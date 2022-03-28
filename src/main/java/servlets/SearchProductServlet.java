@@ -23,7 +23,7 @@ public class SearchProductServlet extends HttpServlet {
         parametersMap.put("products", products);
         response.setContentType("text/html; charset=utf-8");
         try {
-            response.getWriter().println(PageGenerator.instance().getPage("allusers.html", parametersMap));
+            response.getWriter().println(PageGenerator.instance().getPage("allproducts.html", parametersMap));
         } catch (IOException exception) {
             throw new RuntimeException("Cant search product from database");
         }

@@ -34,6 +34,8 @@ public class PageGenerator {
         return stream.toString();
     }
 
+
+
     private PageGenerator() {
         cfg = new Configuration();
     }
