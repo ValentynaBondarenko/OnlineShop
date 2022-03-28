@@ -28,10 +28,9 @@ public class AddProductServlet extends HttpServlet {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("user-token")) {
-                    if(userTokens.contains(cookie.getValue())){
+                    if (userTokens.contains(cookie.getValue())) {
                         isAuth = true;
                     }
-
                     break;
                 }
             }
@@ -64,13 +63,12 @@ public class AddProductServlet extends HttpServlet {
         int price = Integer.parseInt(request.getParameter("price"));
         String creationdate = request.getParameter("creationdate");
 
-
         Product product = new Product(id, name, price, creationdate);
 
         response.setContentType("text/html;charset=utf-8");
 
         try {
-            jdbcProductDao.addNewProduct(product);
+            jdbcProductDao.save(product);
         } catch (NumberFormatException e) {
             throw new RuntimeException("Check new product`s parameters. Cant add to database");
         }

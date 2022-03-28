@@ -4,7 +4,6 @@ import entity.Product;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class JdbcProductDao implements ProductDao {
@@ -37,7 +36,7 @@ public class JdbcProductDao implements ProductDao {
 
 
     @Override
-    public void addNewProduct(Product product) {
+    public void save(Product product) {
         try (Connection connection = connectionFactory.connectionToDatabase();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_NEW)) {
 
@@ -77,11 +76,10 @@ public class JdbcProductDao implements ProductDao {
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
             preparedStatement.setDate(3, Date.valueOf(product.getCreationDate()));
-//            preparedStatement.setInt(4, product.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Cant edit user from database");
+            throw new RuntimeException("Cant edit a product from database");
         }
     }
 
@@ -103,7 +101,7 @@ public class JdbcProductDao implements ProductDao {
             }
             return products;
         } catch (SQLException e) {
-            throw new RuntimeException("error. Can't search product with text: " + searchText, e);
+            throw new RuntimeException("Can't search product with text: " + searchText, e);
         }
     }
 }

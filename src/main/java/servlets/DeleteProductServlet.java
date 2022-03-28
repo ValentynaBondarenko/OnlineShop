@@ -22,7 +22,7 @@ public class DeleteProductServlet extends HttpServlet {
         try {
             response.getWriter().println(page);
         } catch (IOException e) {
-            throw new RuntimeException("Cant get data from request about delete user");
+            throw new RuntimeException("Cant get data from request about delete product");
         }
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);

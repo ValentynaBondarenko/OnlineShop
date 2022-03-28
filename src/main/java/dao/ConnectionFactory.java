@@ -33,7 +33,6 @@ public class ConnectionFactory {
         try {
             Class.forName(properties.getProperty(JDBC_DRIVER));
 
-//            Class.forName(properties.getProperty(JDBC_DRIVER));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("JDBC_DRIVER is not running");
         }

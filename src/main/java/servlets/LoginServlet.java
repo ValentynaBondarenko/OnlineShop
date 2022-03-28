@@ -20,8 +20,6 @@ public class LoginServlet extends HttpServlet {
 
     private List<String> userTokens;
 
-
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> pageVariables = createPageVariablesMap(request);
 
@@ -32,7 +30,6 @@ public class LoginServlet extends HttpServlet {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
@@ -56,8 +53,6 @@ public class LoginServlet extends HttpServlet {
         pageVariables.put("email", request.getParameter("email"));
         pageVariables.put("password", request.getParameter("password"));
 
-
         return pageVariables;
-
     }
 }
