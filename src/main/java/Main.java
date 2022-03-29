@@ -10,19 +10,15 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        AllProductsServlet allProductsServlet = new AllProductsServlet();
-        DeleteProductServlet deleteProductServlet = new DeleteProductServlet();
-        UpdateProductServlet updateProductServlet = new UpdateProductServlet();
-        SearchProductServlet searchProducServlet = new SearchProductServlet();
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        
+
         List<String> userTokens = new ArrayList<>();
 
-        context.addServlet(new ServletHolder(allProductsServlet), "/products");
+        context.addServlet(new ServletHolder(new AllProductsServlet(userTokens)), "/products");
         context.addServlet(new ServletHolder(new AddProductServlet(userTokens)), "/add");
-        context.addServlet(new ServletHolder(deleteProductServlet), "/delete");
-        context.addServlet(new ServletHolder(updateProductServlet), "/update");
-        context.addServlet(new ServletHolder(searchProducServlet), "/products/search");
+        context.addServlet(new ServletHolder(new DeleteProductServlet(userTokens)), "/delete");
+        context.addServlet(new ServletHolder(new UpdateProductServlet(userTokens)), "/update");
+        context.addServlet(new ServletHolder(new SearchProductServlet(userTokens)), "/products/search");
         context.addServlet(new ServletHolder(new LoginServlet(userTokens)), "/login");
 
         Server server = new Server(8080);

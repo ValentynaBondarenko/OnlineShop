@@ -13,14 +13,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public class LoginServlet extends HttpServlet {
+    private List<String> userTokens;
 
     public LoginServlet(List<String> userTokens) {
         this.userTokens = userTokens;
     }
 
-    private List<String> userTokens;
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> pageVariables = createPageVariablesMap(request);
 
         PageGenerator pageGenerator = PageGenerator.instance();
@@ -32,7 +31,7 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -47,7 +46,6 @@ public class LoginServlet extends HttpServlet {
             exception.printStackTrace();
         }
     }
-
     static Map<String, Object> createPageVariablesMap(HttpServletRequest request) {
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("email", request.getParameter("email"));
